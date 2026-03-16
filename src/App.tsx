@@ -16,7 +16,7 @@ function App() {
     getTodos();
   }, []);
 
-  return <div>hi {data}</div>;
+  return <div>hello {data}</div>;
 }
 
 export default App;
