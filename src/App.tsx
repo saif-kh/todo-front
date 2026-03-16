@@ -1,22 +1,65 @@
 import { useEffect, useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "./assets/vite.svg";
-import heroImg from "./assets/hero.png";
-import "./App.css";
+import { ADD_TODO, GET_TODOS } from "./constants/ApiUrls";
+import axios from "axios";
+import type { Todo } from "./constants/Types";
+
+const EMPTY_FIELD_ERROR = "Field cant be empty !!";
+const SERVER_ERROR = "There is a problem, try again later.";
+
+function Modal({ setTodos }: { setTodos?: () => void }) {
+  const [text, setText] = useState("");
+  const [error, setError] = useState("");
+
+  async function handleAdd() {
+    if (!text) {
+      setError(EMPTY_FIELD_ERROR);
+      return;
+    }
+    try {
+      console.log(text);
+      const { data } = await axios.post(ADD_TODO, { text });
+      alert("Todo added !!");
+    } catch (e) {
+      setError(SERVER_ERROR);
+    }
+    setError("");
+  }
+
+  return (
+    <div>
+      <h3>What's your todo ?</h3>
+      <input
+        type="text"
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+      />
+      {error}
+      <button onClick={handleAdd}>Add</button>
+    </div>
+  );
+}
 
 function App() {
-  const [data, setData] = useState("");
+  const [todos, setTodos] = useState<Todo[]>([]);
 
   useEffect(() => {
     async function getTodos() {
-      const res = await fetch("http://localhost:8080/api/todos/all");
-      const data = await res.json();
-      setData(data);
+      const { data } = await axios.get(GET_TODOS);
+      setTodos(data);
     }
     getTodos();
   }, []);
 
-  return <div>hello broskito {data}</div>;
+  return (
+    <div>
+      <div>-------------------------</div>
+      {todos?.map((e, index) => {
+        return <div key={e.id}>{e.text}</div>;
+      })}
+      <div>-------------------------</div>
+      <Modal />
+    </div>
+  );
 }
 
 export default App;
