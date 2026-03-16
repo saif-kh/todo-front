@@ -44,8 +44,8 @@ function App() {
 
   useEffect(() => {
     async function getTodos() {
-      const { data } = await axios.get(GET_TODOS);
-      setTodos(data);
+      const res = await axios.get(GET_TODOS);
+      setTodos(res?.data);
     }
     getTodos();
   }, []);
