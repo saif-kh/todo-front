@@ -1,7 +1,9 @@
-import { it, expect, describe } from "vitest";
+import { it, expect, describe, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import App from "../src/App";
 import "@testing-library/jest-dom/vitest";
+
+vi.mock("axios");
 
 describe("App", () => {
   it("should show up", () => {

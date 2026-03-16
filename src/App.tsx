@@ -44,15 +44,15 @@ function App() {
 
   useEffect(() => {
     async function getTodos() {
-      const { data } = await axios.get(GET_TODOS);
-      setTodos(data);
+      const res = await axios.get(GET_TODOS);
+      setTodos(res?.data);
     }
     getTodos();
   }, []);
 
   return (
     <div>
-      <div>-------------------------</div>
+      <h1>Hellooo broskitoooo todos</h1>
       <div>-------------------------</div>
       {todos?.map((e, index) => {
         return <div key={e.id}>{e.text}</div>;
