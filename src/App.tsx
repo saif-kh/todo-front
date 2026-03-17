@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ADD_TODO,
   CHANGE_TODO,
@@ -8,12 +8,13 @@ import {
 import axios from "axios";
 import type { Todo } from "./constants/Types";
 
-const EMPTY_FIELD_ERROR = "Field cant be empty !!";
-const SERVER_ERROR = "There is a problem, try again later.";
+const EMPTY_FIELD_ERROR = "Field can't be empty !!";
+const SERVER_ERROR = "A problem occured, try again later.";
 
-function Modal() {
+function Modal({ closeModal }: { closeModal: () => void }) {
   const [text, setText] = useState("");
   const [error, setError] = useState("");
+  const ref = useRef<HTMLDivElement>(null);
 
   async function handleAdd() {
     if (!text) {
@@ -24,22 +25,38 @@ function Modal() {
       console.log(text);
       const { data } = await axios.post(ADD_TODO, { text });
       alert("Todo added !!");
+      setError("");
     } catch (e) {
       setError(SERVER_ERROR);
+    } finally {
+      closeModal();
     }
-    setError("");
   }
 
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (ref.current && !ref.current.contains(event.target as Node)) {
+        closeModal();
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div>
-      <div>
+    <div className="modal_wrapper">
+      <div className="modal" ref={ref}>
         <h3>What's your todo ?</h3>
         <input
           type="text"
           value={text}
           onChange={(e) => setText(e.target.value)}
         />
-        {error}
+        <div className="error">{error}</div>
         <button onClick={handleAdd}>Add</button>
       </div>
     </div>
@@ -48,14 +65,18 @@ function Modal() {
 
 function App() {
   const [todos, setTodos] = useState<Todo[]>([]);
+  const [filteredTodos, setFilteredTodos] = useState<Todo[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     async function getTodos() {
       try {
         const res = await axios.get(GET_TODOS);
         setTodos(res?.data);
+        setFilteredTodos(res?.data);
         setIsError(false);
       } catch (e) {
         console.log(e);
@@ -67,6 +88,15 @@ function App() {
     setIsLoading(true);
     getTodos();
   }, []);
+
+  useEffect(() => {
+    if (search) {
+      const temp = todos.filter((e) => e.text.includes(search));
+      setFilteredTodos([...temp]);
+    } else {
+      setFilteredTodos([...todos]);
+    }
+  }, [search]);
 
   async function deleteTodo(id: number) {
     try {
@@ -90,18 +120,36 @@ function App() {
     }
   }
 
+  function closeModal() {
+    setIsModalOpen(false);
+  }
+
+  function openModal() {
+    setIsModalOpen(true);
+  }
+
   return (
     <div>
       <h1>My todos</h1>
+      <div>
+        <input
+          type="text"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+        <button onClick={openModal}>Add Todo</button>
+      </div>
       <div>-------------------------</div>
       {isError ? (
         <div>We having an error</div>
       ) : isLoading ? (
         <div>Loading ...</div>
+      ) : todos?.length === 0 ? (
+        <div>No todos so far</div>
       ) : (
-        todos?.length === 0 && <div>No todos so far</div>
+        <div>No todos match</div>
       )}
-      {todos?.map((e, index) => {
+      {filteredTodos?.map((e, index) => {
         return (
           <div key={e.id}>
             <div>
@@ -117,7 +165,7 @@ function App() {
         );
       })}
       <div>-------------------------</div>
-      <Modal />
+      {isModalOpen && <Modal closeModal={closeModal} />}
     </div>
   );
 }

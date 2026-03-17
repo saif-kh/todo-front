@@ -1,0 +1,35 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --prime-clr: red;
+  --sec-clr: blue;
+  --bg-clr: black;
+  --text-clr: white;
+}
+
+.modal_wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.342);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal {
+  background-color: var(--prime-clr);
+  width: 100%;
+  max-width: 25rem;
+  margin-inline: 1rem;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  border-radius: 0.8rem;
+}
