@@ -1,5 +1,7 @@
 export type Todo = {
   id: number;
   text: string;
-  todoStatus: string;
+  todoStatus: Status;
 };
+
+type Status = "DONE" | "NONE";
