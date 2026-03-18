@@ -1,4 +1,5 @@
-const BASE_URL = "http://localhost:8080/api/todos";
+const BASE_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:8080/api/todos";
 export const GET_TODOS = BASE_URL + "/all";
 export const ADD_TODO = BASE_URL + "/add";
 export const CHANGE_TODO = BASE_URL + "/";
