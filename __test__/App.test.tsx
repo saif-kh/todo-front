@@ -3,7 +3,6 @@ import { render, screen, waitFor } from "@testing-library/react";
 import App from "../src/App";
 import "@testing-library/jest-dom/vitest";
 import axios from "axios";
-import type { Todo } from "../src/constants/Types";
 
 vi.mock("axios");
 const mockedAxios = vi.mocked(axios, true);
