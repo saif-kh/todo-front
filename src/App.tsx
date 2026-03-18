@@ -23,7 +23,7 @@ function Modal({ closeModal }: { closeModal: () => void }) {
     }
     try {
       console.log(text);
-      const { data } = await axios.post(ADD_TODO, { text });
+      await axios.post(ADD_TODO, { text });
       alert("Todo added !!");
       setError("");
     } catch (e) {
@@ -100,7 +100,7 @@ function App() {
 
   async function deleteTodo(id: number) {
     try {
-      const { data } = await axios.delete(DELETE_TODO + id);
+      await axios.delete(DELETE_TODO + id);
       let temp: Todo[] = todos.filter((e) => e.id !== id);
       setTodos([...temp]);
     } catch (error) {
@@ -110,7 +110,7 @@ function App() {
 
   async function changeStatus(id: number) {
     try {
-      const { data } = await axios.get(CHANGE_TODO + id);
+      await axios.get(CHANGE_TODO + id);
       let temp: Todo[] = todos.map((e) => {
         return e.id === id ? { ...e, todoStatus: "DONE" } : e;
       });
@@ -147,7 +147,7 @@ function App() {
       ) : todos?.length === 0 ? (
         <div>No todos so far</div>
       ) : (
-        <div>No todos match</div>
+        search && filteredTodos?.length === 0 && <div>No todos match</div>
       )}
       {filteredTodos?.map((e, index) => {
         return (
