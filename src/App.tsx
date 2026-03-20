@@ -7,6 +7,16 @@ import {
 } from "./constants/ApiUrls";
 import axios from "axios";
 import type { Todo } from "./constants/Types";
+import {
+  Ban,
+  Check,
+  CirclePlus,
+  Frown,
+  LoaderCircle,
+  PenLine,
+  Skull,
+  Trash,
+} from "lucide-react";
 
 const EMPTY_FIELD_ERROR = "Field can't be empty !!";
 const SERVER_ERROR = "A problem occured, try again later.";
@@ -21,9 +31,10 @@ function Modal({ closeModal }: { closeModal: () => void }) {
       setError(EMPTY_FIELD_ERROR);
       return;
     }
+    const fixedText = text.charAt(0).toUpperCase() + text.slice(1);
     try {
       console.log(text);
-      await axios.post(ADD_TODO, { text });
+      await axios.post(ADD_TODO, { text: fixedText });
       alert("Todo added !!");
       setError("");
     } catch (e) {
@@ -51,13 +62,17 @@ function Modal({ closeModal }: { closeModal: () => void }) {
     <div className="modal_wrapper">
       <div className="modal" ref={ref}>
         <h3>What's your todo ?</h3>
-        <input
-          type="text"
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-        />
+        <div className="form_wrapper">
+          <input
+            autoFocus
+            type="text"
+            placeholder="Inser todo name"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+          />
+          <button onClick={handleAdd}>Add</button>
+        </div>
         <div className="error">{error}</div>
-        <button onClick={handleAdd}>Add</button>
       </div>
     </div>
   );
@@ -129,42 +144,68 @@ function App() {
   }
 
   return (
-    <div>
-      <h1>My todos</h1>
-      <div>
+    <div className="main_container">
+      <h1>My todos list</h1>
+      <div className="form_wrapper">
         <input
           type="text"
+          placeholder="Search for todo"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-        <button onClick={openModal}>Add Todo</button>
+        <button onClick={openModal}>
+          Add Todo <CirclePlus size={20} />
+        </button>
       </div>
-      <div>-------------------------</div>
-      {isError ? (
-        <div>We having an error</div>
-      ) : isLoading ? (
-        <div>Loading ...</div>
-      ) : todos?.length === 0 ? (
-        <div>No todos so far</div>
-      ) : (
-        search && filteredTodos?.length === 0 && <div>No todos match</div>
-      )}
-      {filteredTodos?.map((e, index) => {
-        return (
-          <div key={e.id}>
-            <div>
-              {index + 1} - {e.text}
-            </div>
-            {e.todoStatus === "DONE" ? (
-              <div>Done</div>
-            ) : (
-              <button onClick={() => changeStatus(e.id)}>Update status</button>
-            )}
-            <button onClick={() => deleteTodo(e.id)}>Delete</button>
+      <div className="content_wrapper">
+        {isError ? (
+          <div className="edge_case">
+            We having an error <Ban />
           </div>
-        );
-      })}
-      <div>-------------------------</div>
+        ) : isLoading ? (
+          <div className="edge_case">
+            Loading <LoaderCircle className="loading-icon" />
+          </div>
+        ) : todos?.length === 0 ? (
+          <div className="edge_case">
+            No todos so far <Skull />
+          </div>
+        ) : (
+          search &&
+          filteredTodos?.length === 0 && (
+            <div className="edge_case">
+              No todos match <Frown />
+            </div>
+          )
+        )}
+        {filteredTodos.length !== 0 && (
+          <div className="list_wrapper">
+            {filteredTodos?.map((e, index) => {
+              const isDisabled = e.todoStatus === "DONE";
+              return (
+                <div key={e.id} className="todo_wrapper">
+                  <div className="text">
+                    {index + 1} - {e.text}
+                  </div>
+                  <button
+                    disabled={isDisabled}
+                    className={`icon_holder ${isDisabled ? "done" : "update"}`}
+                    onClick={() => changeStatus(e.id)}
+                  >
+                    {isDisabled ? <Check size={25} /> : <PenLine size={20} />}
+                  </button>
+                  <button
+                    className="icon_holder delete"
+                    onClick={() => deleteTodo(e.id)}
+                  >
+                    <Trash size={20} />
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
       {isModalOpen && <Modal closeModal={closeModal} />}
     </div>
   );

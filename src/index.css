@@ -1,14 +1,39 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+  color: var(--text-clr);
 }
 
-:root {
-  --prime-clr: red;
-  --sec-clr: blue;
-  --bg-clr: black;
-  --text-clr: white;
+body {
+  --prime-clr: #0ac4e0;
+  --sec-clr: #3e90ad;
+  --bg-clr: #213448;
+  --text-clr: #fcf4e6;
+  --err-clr: #db1a1a;
+  --ex-clr: rgb(121, 131, 158);
+  background-color: var(--bg-clr);
+  display: flex;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
+}
+
+#root {
+  margin-top: 5rem;
+  width: 100%;
+  max-width: 45rem;
+}
+
+h1 {
+  margin-bottom: 2rem;
+}
+
+h3 {
+  margin-bottom: 1rem;
 }
 
 .modal_wrapper {
@@ -17,19 +42,170 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.342);
+  background-color: rgba(0, 0, 0, 0.482);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .modal {
-  background-color: var(--prime-clr);
+  background-color: var(--bg-clr);
   width: 100%;
-  max-width: 25rem;
+  max-width: 30rem;
   margin-inline: 1rem;
   display: flex;
   flex-direction: column;
   padding: 1rem;
   border-radius: 0.8rem;
+}
+
+.error {
+  margin-top: 0.5rem;
+  font-weight: 500;
+  height: 1.7rem;
+}
+
+.main_container {
+  width: 100%;
+  padding-inline: 1rem;
+}
+
+.main_container h1 {
+  font-size: 3rem;
+}
+
+input,
+button {
+  height: 2.5rem;
+  border-radius: 0.5rem;
+  border: none;
+  font-weight: 500;
+  color: var(--bg-clr);
+}
+
+input {
+  padding-left: 1rem;
+  flex: 1;
+}
+
+button {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  transition: all 0.3s ease;
+  background-color: var(--prime-clr);
+}
+
+button * {
+  stroke: inherit;
+  transition: all 0.2s ease;
+}
+
+button:hover:not(:disabled),
+button:focus:not(:disabled) {
+  background-color: var(--sec-clr) !important;
+  color: var(--text-clr) !important;
+  stroke: var(--text-clr) !important;
+}
+
+button.icon_holder {
+  --size: 2.5rem;
+  width: var(--size);
+  height: var(--size);
+  flex-shrink: 0;
+}
+
+button.delete {
+  background-color: var(--err-clr);
+  stroke: var(--text-clr);
+}
+
+button.update {
+  background-color: var(--prime-clr);
+  stroke: var(--bg-clr);
+}
+
+button.done {
+  background-color: var(--ex-clr);
+  stroke: var(--bg-clr);
+}
+
+.form_wrapper button {
+  min-width: 5rem;
+  padding-inline: 1rem;
+  stroke: var(--bg-clr);
+}
+
+button:disabled {
+  cursor: initial;
+}
+
+.form_wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.content_wrapper {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+  min-height: 5rem;
+}
+
+.edge_case {
+  --size: 2.5rem;
+  margin-block: auto;
+  height: fit-content;
+  font-size: 1.5rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.edge_case * {
+  width: var(--size);
+  height: var(--size);
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-icon {
+  animation: spin 2s linear infinite;
+}
+
+.list_wrapper {
+  width: 100%;
+}
+
+.todo_wrapper {
+  display: flex;
+  gap: 1rem;
+  padding-block: 1rem;
+}
+
+.todo_wrapper:nth-child(n + 2) {
+  border-top: 2px solid rgba(255, 255, 255, 0.17);
+}
+
+.todo_wrapper .text {
+  margin-right: auto;
+  font-size: 1.2rem;
+  font-weight: 500;
+  max-width: 35rem;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
