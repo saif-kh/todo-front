@@ -178,7 +178,7 @@ function App() {
             </div>
           )
         )}
-        {filteredTodos.length !== 0 && (
+        {filteredTodos?.length !== 0 && (
           <div className="list_wrapper">
             {filteredTodos?.map((e, index) => {
               const isDisabled = e.todoStatus === "DONE";
