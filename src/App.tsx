@@ -142,7 +142,7 @@ function App() {
   function openModal() {
     setIsModalOpen(true);
   }
-
+  //test comment
   return (
     <div className="main_container">
       <h1>My todos list</h1>
